@@ -4,7 +4,7 @@
 并提供受保护的设备管理页面。它不执行 OAS 任务，也不接收正常运行时的截图、OCR
 输入或普通 Agent 日志。
 
-本目录按“公网 IP + `ws://`”部署：Docker 直接发布 `22270`，Android/redroid Agent
+本目录按“公网 IP + `ws://`”部署：Docker 直接发布 `22270`，Root 手机 Agent
 直接连接控制面。这个模式没有 TLS：共享密钥、错误包上传请求头和管理后台密码都会
 以明文传输。仅适合受信任网络，或已通过安全组/防火墙限制设备来源 IP 的场景。
 
@@ -12,7 +12,7 @@
 
 - Linux 服务器已安装 Docker Engine 和 Docker Compose Plugin（使用 `docker compose`）。
 - 服务器公网 IP 是 `154.206.14.32`，云安全组和本机防火墙允许 TCP `22270`。
-- 不要让任意公网来源访问此端口；请尽量只允许你的 Android/redroid 设备出口 IP 和
+- 不要让任意公网来源访问此端口；请尽量只允许你的 Root 手机出口 IP 和
   管理电脑出口 IP。管理页面同样走该端口，Basic Auth 不具备传输加密。
 
 ## 首次部署
@@ -68,7 +68,7 @@ curl --fail --user 'admin:<管理密码>' \
 ## Compose 组成与持久化数据
 
 ```text
-Android/redroid Agent ── ws://154.206.14.32:22270 ── oas-control-plane
+Root 手机 Agent      ── ws://154.206.14.32:22270 ── oas-control-plane
 管理浏览器          ── http://154.206.14.32:22270 ──┘
 ```
 
@@ -91,19 +91,9 @@ Android/redroid Agent ── ws://154.206.14.32:22270 ── oas-control-plane
 2. 以 [template.agent-device.json](config/template.agent-device.json) 为模板创建设备；
    修改 `device_id`、`display_name`、游戏包名和屏幕分辨率以匹配真实设备。模板中的
    `Restart` 任务必须保留。
-3. 在对应 Android/redroid 的 `/data/oas-agent/agent.env` 配置：
-
-   ```ini
-   OAS_AGENT_DEVICE_ID=<与服务端设备 device_id 完全一致>
-   OAS_AGENT_SERVER_URL=ws://154.206.14.32:22270
-   OAS_AGENT_ALLOW_INSECURE_WS=true
-   OAS_AGENT_SHARED_SECRET=<与服务端 .env 完全一致>
-   OAS_AGENT_VERSION=2026.11.26
-   OAS_AGENT_RESOURCE_VERSION=2026.11.26
-   ```
-
-`OAS_AGENT_ALLOW_INSECURE_WS=true` 是直连模式的必填显式确认。不要填写 `/agent` 或
-`/agent/ws`；Agent 会自动连接到 `/agent/ws`，并在失败时向同一 IP 以 HTTP 上传错误包。
+3. 按 [Agent 安装说明](../agent/README.md) 在 Root 手机命令行中安装并启动 Agent。设备的
+   `agent.env` 中 `OAS_AGENT_DEVICE_ID` 和 `OAS_AGENT_SHARED_SECRET` 必须分别匹配
+   本步骤创建的设备 ID 与本服务的 `.env`。
 
 ## 日常运维
 

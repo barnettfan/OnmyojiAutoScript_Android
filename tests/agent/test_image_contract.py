@@ -62,6 +62,26 @@ class ImageContractTest(unittest.TestCase):
         self.assertIn("    disabled", init_script)
         self.assertIn("on property:sys.boot_completed=1\n    start oas_android_agent", init_script)
 
+    def test_root_phone_launcher_keeps_code_and_secret_paths_fixed(self) -> None:
+        """实体 Root 手机启动器必须从固定目录读取代码、密钥和开机服务。"""
+        launcher = (PROJECT_ROOT / "init" / "run-root-phone-agent.sh").read_text(encoding="utf-8")
+        proot_launcher = (PROJECT_ROOT / "init" / "run-proot-phone-agent.sh").read_text(encoding="utf-8")
+        magisk_service = (PROJECT_ROOT / "init" / "oas_android_agent_magisk.sh").read_text(encoding="utf-8")
+        self.assertIn('/data/local/oas-agent', launcher)
+        self.assertIn('export OAS_AGENT_RUNTIME_ROOT="${agent_root}/runtime/oas"', launcher)
+        self.assertIn('OAS_AGENT_ALLOW_INSECURE_WS', launcher)
+        self.assertIn('OAS_AGENT_ROOT_SU_BIN', launcher)
+        self.assertIn('OAS_AGENT_PROOT_DISTRO', launcher)
+        self.assertIn('OAS_AGENT_TERMUX_PREFIX', launcher)
+        self.assertIn('run-proot-phone-agent.sh', launcher)
+        self.assertIn('OAS_AGENT_SHARED_SECRET', proot_launcher)
+        self.assertIn('OAS_AGENT_ROOT_SU_BIN', proot_launcher)
+        self.assertIn('OAS_AGENT_PROOT_DISTRO', proot_launcher)
+        self.assertIn('OAS_AGENT_TERMUX_PREFIX', proot_launcher)
+        self.assertIn('exec "$python_bin" -m oas_android_agent', proot_launcher)
+        self.assertIn('getprop sys.boot_completed', magisk_service)
+        self.assertIn('run-root-phone-agent.sh', magisk_service)
+
 
 if __name__ == "__main__":
     unittest.main()
