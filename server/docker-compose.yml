@@ -1,0 +1,46 @@
+services:
+  oas-control-plane:
+    build:
+      context: ..
+      dockerfile: server/Dockerfile
+    env_file:
+      - .env
+    environment:
+      # The port is intentionally not published to the host; Caddy is the only
+      # public entrypoint and terminates TLS/WSS on ports 80 and 443.
+      OAS_CONTROL_PLANE_HOST: 0.0.0.0
+      OAS_CONTROL_PLANE_PORT: 22270
+    expose:
+      - "22270"
+    volumes:
+      # Device configuration and failure bundles must survive image rebuilds.
+      - oas_device_config:/app/config/devices
+      - oas_server_log:/app/log
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+
+  caddy:
+    image: caddy:2.8.4-alpine
+    depends_on:
+      - oas-control-plane
+    env_file:
+      - .env
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      # Caddy persists ACME certificates and its runtime configuration here.
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  oas_device_config:
+  oas_server_log:
+  caddy_data:
+  caddy_config:
