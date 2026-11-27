@@ -1,0 +1,44 @@
+[
+  {
+    "itemName": "click_settings",
+    "roiFront": "55,662,21,21",
+    "roiBack": "55,662,21,21",
+    "profile": "Default",
+    "description": "点击设置按钮"
+  },
+  {
+    "itemName": "click_standby_team",
+    "roiFront": "545,222,506,100",
+    "roiBack": "545,222,506,100",
+    "profile": "Default",
+    "description": "选中候补出战"
+  },
+  {
+    "itemName": "click_main_title",
+    "roiFront": "1070,174,77,28",
+    "roiBack": "1070,174,77,28",
+    "profile": "Default",
+    "description": "点击主线tab"
+  },
+  {
+    "itemName": "click_paly_title",
+    "roiFront": "1178,172,77,28",
+    "roiBack": "1178,172,77,28",
+    "profile": "Default",
+    "description": "点击玩法tab"
+  },
+  {
+    "itemName": "select_normal",
+    "roiFront": "62,228,68,34",
+    "roiBack": "62,228,68,34",
+    "profile": "Default",
+    "description": ""
+  },
+  {
+    "itemName": "select_hard",
+    "roiFront": "69,315,68,34",
+    "roiBack": "69,315,68,34",
+    "profile": "Default",
+    "description": ""
+  }
+]

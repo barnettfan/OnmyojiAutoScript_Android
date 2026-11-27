@@ -1,0 +1,192 @@
+[
+  {
+    "itemName": "exploration_goto_awake_zone",
+    "imageName": "page_exploration_goto_awake_zone.png",
+    "profile": "High",
+    "roiFront": "161,633,47,44",
+    "roiBack": "33,619,1150,99",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "探索前往觉醒"
+  },
+  {
+    "itemName": "exploration_goto_soul_zone",
+    "imageName": "page_exploration_goto_soul_zone.png",
+    "profile": "High",
+    "roiFront": "69,633,46,39",
+    "roiBack": "33,619,1150,99",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "探索前往御魂"
+  },
+  {
+    "itemName": "exploration_goto_realm_raid",
+    "imageName": "page_exploration_goto_realm_raid.png",
+    "profile": "High",
+    "roiFront": "354,636,49,38",
+    "roiBack": "33,619,1150,99",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "探索前往结界突破"
+  },
+  {
+    "itemName": "exploration_goto_goryou_realm",
+    "imageName": "page_exploration_goto_goryou_realm.png",
+    "profile": "High",
+    "roiFront": "353,639,47,45",
+    "roiBack": "33,619,1150,99",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "探索前往御灵"
+  },
+  {
+    "itemName": "exploration_goto_delegation",
+    "imageName": "page_exploration_goto_delegation.png",
+    "profile": "High",
+    "roiFront": "448,634,54,39",
+    "roiBack": "33,619,1150,99",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "探索前往式神委派"
+  },
+  {
+    "itemName": "exploration_goto_secret_zones",
+    "imageName": "page_exploration_goto_secret_zones.png",
+    "profile": "High",
+    "roiFront": "546,635,51,42",
+    "roiBack": "33,619,1150,99",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "探索前往秘闻"
+  },
+  {
+    "itemName": "exploration_goto_hero_test",
+    "imageName": "page_exploration_goto_hero_test.png",
+    "profile": "High",
+    "roiFront": "829,634,58,56",
+    "roiBack": "33,619,1150,99",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "探索前往英杰试炼"
+  },
+  {
+    "itemName": "exploration_goto_area_boss",
+    "imageName": "page_exploration_goto_area_boss.png",
+    "profile": "High",
+    "roiFront": "642,638,50,38",
+    "roiBack": "33,619,1150,99",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "探索前往地域鬼王"
+  },
+  {
+    "itemName": "exploration_goto_heian_kitan",
+    "imageName": "page_exploration_goto_heian_kitan.png",
+    "profile": "High",
+    "roiFront": "739,643,52,44",
+    "roiBack": "33,619,1150,99",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "探索前往平安奇谭"
+  },
+  {
+    "itemName": "exploration_goto_bondling_fairyland",
+    "imageName": "page_exploration_goto_bondling_fairyland.png",
+    "profile": "High",
+    "roiFront": "1024,635,52,47",
+    "roiBack": "33,619,1150,99",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "探索前往契灵之境"
+  },
+  {
+    "itemName": "ryoutoppa_goto_realmraid",
+    "imageName": "page_ryoutoppa_goto_realmraid.png",
+    "profile": "High",
+    "roiFront": "1201,234,62,105",
+    "roiBack": "1201,234,62,105",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "寮突切换到个突按钮"
+  },
+  {
+    "itemName": "kekkai_toppa",
+    "imageName": "page_kekkai_toppa.png",
+    "profile": "High",
+    "roiFront": "1065,3,203,61",
+    "roiBack": "1065,3,203,61",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "寮突页面标志"
+  },
+  {
+    "itemName": "realm_raid_goto_shikigami_records",
+    "imageName": "page_realm_raid_goto_shikigami_records.png",
+    "profile": "High",
+    "roiFront": "1208,610,45,44",
+    "roiBack": "1166,520,112,198",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "突破进入式神录按钮"
+  },
+  {
+    "itemName": "exploration_to_moon_sea",
+    "imageName": "page_exploration_to_moon_sea.png",
+    "profile": "High",
+    "roiFront": "930,635,49,44",
+    "roiBack": "33,619,1150,99",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "探索前往月之海"
+  },
+  {
+    "itemName": "exploration_to_incense_realm",
+    "imageName": "page_exploration_to_incense_realm.png",
+    "profile": "High",
+    "roiFront": "930,635,49,44",
+    "roiBack": "33,619,1150,99",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "探索前往香行域"
+  },
+  {
+    "itemName": "exploration_to_seasonrift_forest",
+    "imageName": "page_exploration_to_seasonrift_forest.png",
+    "profile": "High",
+    "roiFront": "930,635,49,44",
+    "roiBack": "33,619,1150,99",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "探索前往错季森"
+  },
+  {
+    "itemName": "exploration_to_pure_buddha_realm",
+    "imageName": "page_exploration_to_pure_buddha_realm.png",
+    "profile": "High",
+    "roiFront": "930,635,49,44",
+    "roiBack": "33,619,1150,99",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "探索前往净佛刹"
+  },
+  {
+    "itemName": "exploration_to_mantra_tower",
+    "imageName": "page_exploration_to_mantra_tower.png",
+    "profile": "High",
+    "roiFront": "930,635,49,44",
+    "roiBack": "33,619,1150,99",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "探索前往真言塔"
+  },
+  {
+    "itemName": "exploration_to_peacock_kingdom",
+    "imageName": "page_exploration_to_peacock_kingdom.png",
+    "profile": "High",
+    "roiFront": "930,635,49,44",
+    "roiBack": "33,619,1150,99",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "探索前往孔雀国"
+  }
+]

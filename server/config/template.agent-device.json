@@ -1,0 +1,80 @@
+{
+  "device_id": "redroid-cn-01",
+  "display_name": "红叶 01",
+  "revision": 0,
+  "required_agent_version": "2026.11.26",
+  "device": {
+    "transport": "root_shell",
+    "game_package": "com.netease.onmyoji",
+    "screen_size": [1280, 720]
+  },
+  "runtime": {
+    "script": {
+      "error": {
+        "handle_error": true,
+        "error_repeated": false,
+        "save_error": true,
+        "screenshot_length": 3,
+        "notify_enable": false,
+        "notify_config": "provider: null"
+      },
+      "optimization": {
+        "screenshot_interval": 0.3,
+        "combat_screenshot_interval": 1.0,
+        "task_hoarding_duration": 0,
+        "when_task_queue_empty": "goto_main",
+        "schedule_rule": "Priority"
+      }
+    },
+    "global_game": {"ocr": {"save_ocr_log": false}}
+  },
+  "tasks": {
+    "Restart": {
+      "agent": {"minimum_resource_version": "2026.11.26"},
+      "scheduler": {
+        "enable": false,
+        "next_run": "2026-01-01 00:00:00",
+        "priority": 0,
+        "success_interval": "01 00:00:00",
+        "failure_interval": "01 00:00:00"
+      },
+      "restart_config": {"enable_daily": false, "error_restart_limit": 3}
+    },
+    "GotoMain": {
+      "agent": {"minimum_resource_version": "2026.11.26"},
+      "scheduler": {"enable": false, "next_run": "2026-01-01 00:00:00", "priority": 0}
+    },
+    "DailyTrifles": {
+      "agent": {"minimum_resource_version": "2026.11.26"},
+      "scheduler": {"enable": false, "next_run": "2026-01-01 00:00:00", "priority": 3}
+    },
+    "Exploration": {
+      "agent": {"minimum_resource_version": "2026.11.26"},
+      "scheduler": {"enable": false, "next_run": "2026-01-01 00:00:00", "priority": 5}
+    },
+    "Orochi": {
+      "agent": {"minimum_resource_version": "2026.11.26"},
+      "scheduler": {"enable": false, "next_run": "2026-01-01 00:00:00", "priority": 5}
+    },
+    "EvoZone": {
+      "agent": {"minimum_resource_version": "2026.11.26"},
+      "scheduler": {"enable": false, "next_run": "2026-01-01 00:00:00", "priority": 5}
+    },
+    "GoldYoukai": {
+      "agent": {"minimum_resource_version": "2026.11.26"},
+      "scheduler": {"enable": false, "next_run": "2026-01-01 00:00:00", "priority": 5}
+    },
+    "ExperienceYoukai": {
+      "agent": {"minimum_resource_version": "2026.11.26"},
+      "scheduler": {"enable": false, "next_run": "2026-01-01 00:00:00", "priority": 5}
+    },
+    "Sougenbi": {
+      "agent": {"minimum_resource_version": "2026.11.26"},
+      "scheduler": {"enable": false, "next_run": "2026-01-01 00:00:00", "priority": 5}
+    },
+    "SoulsTidy": {
+      "agent": {"minimum_resource_version": "2026.11.26"},
+      "scheduler": {"enable": false, "next_run": "2026-01-01 00:00:00", "priority": 5}
+    }
+  }
+}

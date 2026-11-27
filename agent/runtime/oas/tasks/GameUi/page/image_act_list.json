@@ -1,0 +1,12 @@
+[
+  {
+    "itemName": "act_list_goto_act",
+    "imageName": "page_act_list_goto_act.png",
+    "profile": "High",
+    "roiFront": "1063,627,156,60",
+    "roiBack": "1007,552,272,166",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "活动列表页前往活动"
+  }
+]

@@ -1,0 +1,29 @@
+[
+  {
+    "itemName": "de_boss_people",
+    "roiFront": "880,591,100,35",
+    "roiBack": "880,591,100,35",
+    "mode": "DigitCounter",
+    "method": "Default",
+    "keyword": "",
+    "description": "人数"
+  },
+  {
+    "itemName": "de_best_boss_people",
+    "roiFront": "902,564,100,31",
+    "roiBack": "902,564,100,31",
+    "mode": "DigitCounter",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "boss_result_title",
+    "roiFront": "621,174,241,64",
+    "roiBack": "621,174,241,64",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "通关评价",
+    "description": "胜利结算通关评价标题"
+  }
+]

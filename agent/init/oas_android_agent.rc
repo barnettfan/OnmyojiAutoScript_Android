@@ -1,0 +1,12 @@
+# Android init service for the Root OAS Agent. The redroid base image keeps its
+# original init/entrypoint; this service starts only after Android has booted.
+service oas_android_agent /system/bin/sh /opt/oas-agent/run-agent.sh
+    class late_start
+    # 仅允许下面的 sys.boot_completed trigger 拉起。否则 Android init 启动
+    # late_start 类时可能在 Surface、包管理器和 RootShell 尚未稳定前启动 Agent。
+    disabled
+    user root
+    group root
+
+on property:sys.boot_completed=1
+    start oas_android_agent

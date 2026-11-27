@@ -1,0 +1,74 @@
+[
+  {
+    "itemName": "wq_number",
+    "roiFront": "523,12,97,41",
+    "roiBack": "523,12,97,41",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "挑战券的数量"
+  },
+  {
+    "itemName": "wq_type_1",
+    "roiFront": "637,281,344,40",
+    "roiBack": "637,281,344,40",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "wq_type_2",
+    "roiFront": "635,356,344,40",
+    "roiBack": "635,356,344,40",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "wq_type_3",
+    "roiFront": "639,433,344,40",
+    "roiBack": "639,433,344,40",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "wq_type_4",
+    "roiFront": "637,508,344,40",
+    "roiBack": "637,508,344,40",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
+  },
+  {
+    "itemName": "wq_monster_type",
+    "roiFront": "635,158,475,42",
+    "roiBack": "635,158,475,42",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "悬赏目标语句，用于识别未知目标与忽略名单"
+  },
+  {
+    "itemName": "wq_text_all",
+    "roiFront": "9,113,97,404",
+    "roiBack": "9,113,97,404",
+    "mode": "Full",
+    "method": "Default",
+    "keyword": "",
+    "description": "探索左侧悬赏列表文字与进度，用于定位未完成任务"
+  },
+  {
+    "itemName": "wq_list_check",
+    "roiFront": "11,114,92,388",
+    "roiBack": "11,114,92,388",
+    "mode": "Full",
+    "method": "Default",
+    "keyword": "悬赏封印",
+    "description": "是否有悬赏封印检查"
+  }
+]

@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OAS Android Agent</title>
+  <style>
+    :root { color-scheme: light dark; font-family: system-ui, sans-serif; }
+    body { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
+    header, .row { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
+    button { padding: .45rem .8rem; cursor: pointer; }
+    table { border-collapse: collapse; width: 100%; margin: 1rem 0; }
+    th, td { border: 1px solid #9996; padding: .55rem; text-align: left; vertical-align: top; }
+    .online { color: #198754; font-weight: 700; }
+    .offline, .error { color: #c23b22; font-weight: 700; }
+    textarea { box-sizing: border-box; font-family: ui-monospace, monospace; min-height: 25rem; width: 100%; }
+    dialog { width: min(900px, 92vw); }
+    .muted { opacity: .7; font-size: .9em; }
+    pre { background: #8882; max-height: 20rem; overflow: auto; padding: .75rem; white-space: pre-wrap; }
+    .screenshots { display: flex; flex-wrap: wrap; gap: .75rem; }
+    .screenshots img { border: 1px solid #9996; max-height: 220px; max-width: 100%; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Android Agent 设备管理</h1>
+    <button id="refresh">刷新</button>
+    <button id="register">注册设备 JSON</button>
+    <span class="muted">服务器不接收正常截图或任务日志；可查看控制面事件与错误现场。</span>
+  </header>
+  <p id="notice" role="status"></p>
+  <table>
+    <thead><tr><th>设备</th><th>连接</th><th>Agent</th><th>当前任务 / 租约</th><th>最近结果</th><th>操作</th></tr></thead>
+    <tbody id="devices"></tbody>
+  </table>
+  <dialog id="editor">
+    <form method="dialog"><header><h2 id="editor-title">设备配置</h2><button>关闭</button></header></form>
+    <p class="muted">保存时使用 revision 比较；若有人先保存，请刷新后处理冲突。</p>
+    <textarea id="config-json" spellcheck="false"></textarea>
+    <div class="row"><button id="save" type="button">原子保存配置</button><button id="run" type="button">手动执行任务</button></div>
+  </dialog>
+  <dialog id="errors">
+    <form method="dialog"><header><h2 id="errors-title">错误现场</h2><button>关闭</button></header></form>
+    <div id="error-content"></div>
+  </dialog>
+  <dialog id="events">
+    <form method="dialog"><header><h2 id="events-title">控制面事件</h2><button>关闭</button></header></form>
+    <p class="muted">仅记录 Server 观察到的连接、租约、结果和错误包元数据；不含设备正常任务日志或截图。</p>
+    <div id="event-content"></div>
+  </dialog>
+  <script>
+    const notice = document.querySelector('#notice');
+    const rows = document.querySelector('#devices');
+    const editor = document.querySelector('#editor');
+    const configText = document.querySelector('#config-json');
+    const errorsDialog = document.querySelector('#errors');
+    const errorContent = document.querySelector('#error-content');
+    const eventsDialog = document.querySelector('#events');
+    const eventContent = document.querySelector('#event-content');
+    let selected = null;
+
+    function show(message, error = false) { notice.textContent = message; notice.className = error ? 'error' : ''; }
+    async function api(path, options = {}) {
+      const response = await fetch(path, { headers: { 'Content-Type': 'application/json', ...(options.headers || {}) }, ...options });
+      if (!response.ok) throw new Error((await response.text()) || response.statusText);
+      return response.status === 204 ? null : response.json();
+    }
+    function text(value) { return value == null ? '—' : String(value); }
+    function escaped(value) { return text(value).replace(/[&<>'"]/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[char]); }
+    function taskText(device) {
+      if (!device.lease) return escaped(device.current_task || '空闲');
+      const started = device.lease.started_at ? `（已启动 ${escaped(device.lease.started_at)}）` : '（等待 Agent 启动确认）';
+      const recovery = device.recovery_reason ? `\n⚠ ${escaped(device.recovery_reason)}` : '';
+      return `${escaped(device.lease.task_name)}\n${escaped(device.lease.execution_id.slice(0, 8))}…${started}${device.lease.stop_requested ? '（停止中）' : ''}${device.lease.expired ? '（租约超时，等待 Agent 对齐）' : ''}${recovery}`;
+    }
+    function healthText(device) {
+      // 预检失败时优先显示 Agent 给出的可操作原因，避免错误派发被误判为离线。
+      const health = device.health || {};
+      if (!device.online) return '—';
+      if (health.status === 'healthy') return '预检通过';
+      if (health.status === 'unhealthy') return `预检失败：${text(health.reason || '请查看控制面事件或设备本地日志')}`;
+      return '预检中';
+    }
+    async function refresh() {
+      try {
+        const devices = await api('/agents/devices');
+        rows.replaceChildren(...devices.map((device) => {
+          const row = document.createElement('tr');
+          const state = device.online ? '<span class="online">在线</span>' : '<span class="offline">离线</span>';
+          const compatible = device.online ? (device.compatible ? '兼容' : `不兼容：${text(device.incompatibility_reason)}`) : '—';
+          const healthClass = device.health?.status === 'healthy' ? 'online' : 'error';
+          const supported = Object.values(device.task_support || {}).filter(Boolean).length;
+          const totalTasks = Object.keys(device.tasks || {}).length;
+          row.innerHTML = `<td>${escaped(device.display_name)}<br><span class="muted">${escaped(device.device_id)} / r${text(device.config_revision)}</span></td>
+            <td>${state}<br><span class="muted">${text(device.last_heartbeat)}<br>前台：${escaped(device.foreground_package || '未知')}</span><br><span class="${healthClass}">${escaped(healthText(device))}</span></td>
+            <td>${escaped(device.agent_version)}<br><span class="muted">${escaped(compatible)}；缓存 r${text(device.confirmed_config_revision)} / 服务端 r${text(device.config_revision)}；任务 ${supported}/${totalTasks}</span></td>
+            <td style="white-space:pre-wrap">${taskText(device)}</td>
+            <td>${device.last_result ? `${escaped(device.last_result.task_name)}: ${escaped(device.last_result.status)}${device.last_result.duration_seconds != null ? `（${escaped(device.last_result.duration_seconds)}s）` : ''}<br><span class="muted">${escaped(device.last_result.summary)}</span>` : '—'}</td>
+            <td><button data-edit="${escaped(device.device_id)}">配置</button> <button data-stop="${escaped(device.device_id)}" ${device.lease ? '' : 'disabled'}>停止</button> ${device.recovery_reason && device.lease ? `<button data-recovery="${escaped(device.device_id)}">确认旧执行已停止</button>` : ''} <button data-events="${escaped(device.device_id)}">事件</button> <button data-errors="${escaped(device.device_id)}">错误</button></td>`;
+          return row;
+        }));
+        show(`已刷新 ${devices.length} 台设备。`);
+      } catch (error) { show(`刷新失败：${error.message}`, true); }
+    }
+    rows.addEventListener('click', async (event) => {
+      const button = event.target.closest('button');
+      if (!button) return;
+      try {
+        if (button.dataset.edit) {
+          selected = button.dataset.edit;
+          const config = await api(`/agents/devices/${encodeURIComponent(selected)}/config`);
+          document.querySelector('#editor-title').textContent = `${selected} 配置`;
+          configText.value = JSON.stringify(config, null, 2);
+          editor.showModal();
+        }
+        if (button.dataset.stop && confirm(`请求停止 ${button.dataset.stop} 的当前任务？`)) {
+          await api(`/agents/devices/${encodeURIComponent(button.dataset.stop)}/stop`, { method: 'POST', body: '{}' });
+          await refresh();
+        }
+        if (button.dataset.recovery) {
+          const device = (await api(`/agents/devices/${encodeURIComponent(button.dataset.recovery)}`));
+          const lease = device.lease;
+          if (!lease || !device.recovery_reason) throw new Error('设备当前没有待人工确认的恢复租约');
+          if (confirm(`仅在确认旧 Agent 已停止后继续。\nexecution_id: ${lease.execution_id}\n确认释放 Server 租约？`)) {
+            await api(`/agents/devices/${encodeURIComponent(button.dataset.recovery)}/recovery/resolve`, { method: 'POST', body: JSON.stringify({ execution_id: lease.execution_id }) });
+            await refresh();
+          }
+        }
+        if (button.dataset.errors) await showErrors(button.dataset.errors);
+        if (button.dataset.events) await showEvents(button.dataset.events);
+      } catch (error) { show(`操作失败：${error.message}`, true); }
+    });
+    async function showErrors(deviceId) {
+      const list = await api(`/agents/devices/${encodeURIComponent(deviceId)}/errors`);
+      document.querySelector('#errors-title').textContent = `${deviceId} 错误现场`;
+      errorContent.replaceChildren();
+      if (!list.items.length) {
+        errorContent.textContent = '暂无已上传的错误现场。';
+      } else {
+        const listElement = document.createElement('ul');
+        for (const item of list.items) {
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.textContent = `${item.time}（${item.image_count} 张截图）`;
+          button.addEventListener('click', () => showErrorDetail(deviceId, item.id));
+          const line = document.createElement('li');
+          line.append(button);
+          listElement.append(line);
+        }
+        errorContent.append(listElement);
+      }
+      errorsDialog.showModal();
+    }
+    async function showEvents(deviceId) {
+      const result = await api(`/agents/devices/${encodeURIComponent(deviceId)}/events`);
+      document.querySelector('#events-title').textContent = `${deviceId} 控制面事件`;
+      eventContent.replaceChildren();
+      if (!result.items.length) {
+        eventContent.textContent = '暂无本次 Server 进程中的控制面事件。';
+      } else {
+        const output = document.createElement('pre');
+        output.textContent = result.items.map((item) => {
+          const { time, event, ...details } = item;
+          const suffix = Object.entries(details).map(([key, value]) => `${key}=${value}`).join('；');
+          return `${time} ${event}${suffix ? `；${suffix}` : ''}`;
+        }).join('\n');
+        eventContent.append(output);
+      }
+      eventsDialog.showModal();
+    }
+    async function showErrorDetail(deviceId, errorId) {
+      const detail = await api(`/agents/devices/${encodeURIComponent(deviceId)}/errors/${encodeURIComponent(errorId)}`);
+      errorContent.replaceChildren();
+      const meta = document.createElement('p');
+      meta.textContent = `${detail.time}；${detail.images.length} 张错误截图`;
+      const contextTitle = document.createElement('h3');
+      contextTitle.textContent = 'Server 权威错误元数据';
+      const context = document.createElement('pre');
+      context.textContent = detail.context ? JSON.stringify(detail.context, null, 2) : '（没有可用的任务上下文）';
+      const taskContextTitle = document.createElement('h3');
+      taskContextTitle.textContent = 'Agent/OAS 任务细节上下文';
+      const taskContext = document.createElement('pre');
+      taskContext.textContent = detail.task_context ? JSON.stringify(detail.task_context, null, 2) : '（没有附带的任务细节上下文）';
+      const log = document.createElement('pre');
+      log.textContent = detail.log.content || '（没有上传 log.txt）';
+      const screenshots = document.createElement('div');
+      screenshots.className = 'screenshots';
+      for (const image of detail.images) {
+        const picture = document.createElement('img');
+        picture.src = image.url;
+        picture.alt = image.name;
+        picture.loading = 'lazy';
+        screenshots.append(picture);
+      }
+      errorContent.append(meta, contextTitle, context, taskContextTitle, taskContext, log, screenshots);
+    }
+    document.querySelector('#save').addEventListener('click', async () => {
+      try {
+        const config = JSON.parse(configText.value);
+        const saved = await api(`/agents/devices/${encodeURIComponent(selected)}/config`, { method: 'PUT', body: JSON.stringify({ expected_revision: config.revision, config }) });
+        configText.value = JSON.stringify(saved, null, 2);
+        show(`配置已保存为 revision ${saved.revision}。`);
+        await refresh();
+      } catch (error) { show(`保存失败：${error.message}`, true); }
+    });
+    document.querySelector('#run').addEventListener('click', async () => {
+      const taskName = prompt('输入已配置的任务名（例如 Exploration）');
+      if (!taskName) return;
+      try {
+        await api(`/agents/devices/${encodeURIComponent(selected)}/execute`, { method: 'POST', body: JSON.stringify({ task_name: taskName }) });
+        editor.close();
+        await refresh();
+      } catch (error) { show(`执行失败：${error.message}`, true); }
+    });
+    document.querySelector('#refresh').addEventListener('click', refresh);
+    document.querySelector('#register').addEventListener('click', async () => {
+      const raw = prompt('粘贴 config/template.agent-device.json 内容');
+      if (!raw) return;
+      try {
+        const config = JSON.parse(raw);
+        await api('/agents/devices', { method: 'POST', body: JSON.stringify({ config }) });
+        show(`设备 ${config.device_id} 已注册。`);
+        await refresh();
+      } catch (error) { show(`注册失败：${error.message}`, true); }
+    });
+    refresh();
+  </script>
+</body>
+</html>

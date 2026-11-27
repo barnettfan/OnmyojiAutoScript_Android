@@ -1,0 +1,12 @@
+# Transport dependencies for the redroid Agent.
+#
+# Pin requests and all of its transitive dependencies so one Dockerfile does
+# not resolve a different certificate or HTTP implementation on another day.
+# OAS image/OCR dependencies remain provided by the versioned BASE_IMAGE;
+# do not reinstall the desktop dependency set here.
+certifi==2023.11.17
+charset-normalizer==3.3.2
+idna==3.6
+requests==2.34.2
+urllib3==2.1.0
+websockets==13.1

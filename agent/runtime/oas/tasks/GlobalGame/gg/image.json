@@ -1,0 +1,102 @@
+[
+  {
+    "itemName": "g_accept",
+    "imageName": "gg_g_accept.png",
+    "roiFront": "846,476,56,46",
+    "roiBack": "814,430,117,110",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "profile": "High",
+    "description": "接受"
+  },
+  {
+    "itemName": "g_reject",
+    "imageName": "gg_g_reject.png",
+    "roiFront": "846,562,53,51",
+    "roiBack": "819,536,108,101",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "profile": "High",
+    "description": "拒绝"
+  },
+  {
+    "itemName": "g_jade",
+    "imageName": "gg_g_jade.png",
+    "roiFront": "676,480,43,46",
+    "roiBack": "646,457,94,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "profile": "High",
+    "description": "勾玉"
+  },
+  {
+    "itemName": "g_cat_food",
+    "imageName": "gg_g_cat_food.png",
+    "roiFront": "664,475,59,65",
+    "roiBack": "543,421,205,176",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "profile": "High",
+    "description": "猫粮"
+  },
+  {
+    "itemName": "g_dog_food",
+    "imageName": "gg_g_dog_food.png",
+    "roiFront": "585,494,63,54",
+    "roiBack": "543,421,205,176",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "profile": "High",
+    "description": "狗粮"
+  },
+  {
+    "itemName": "g_ignore",
+    "imageName": "gg_g_ignore.png",
+    "roiFront": "792,86,21,21",
+    "roiBack": "777,49,154,64",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "profile": "High",
+    "description": "忽略"
+  },
+  {
+    "itemName": "network_abnormal",
+    "imageName": "gg_network_abnormal.png",
+    "roiFront": "588,335,211,57",
+    "roiBack": "583,330,221,67",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "profile": "High",
+    "description": "网络异常"
+  },
+  {
+    "itemName": "network_error",
+    "imageName": "gg_network_error.png",
+    "roiFront": "436,258,406,198",
+    "roiBack": "431,253,416,208",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "profile": "High",
+    "description": "已端口游戏服务器，需要重新连接，这种情况一般是断开很久了"
+  },
+  {
+    "itemName": "client_clear",
+    "imageName": "gg_client_clear.png",
+    "roiFront": "599,383,85,42",
+    "roiBack": "594,378,95,52",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "profile": "High",
+    "description": "客户端重启确认"
+  },
+  {
+    "itemName": "chat_close_button",
+    "imageName": "gg_chat_close_button.png",
+    "roiFront": "632,343,49,103",
+    "roiBack": "632,343,49,103",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "profile": "High",
+    "description": "description"
+  }
+]

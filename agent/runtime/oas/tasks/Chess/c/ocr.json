@@ -1,0 +1,74 @@
+[
+  {
+    "itemName": "level",
+    "roiFront": "131,680,47,30",
+    "roiBack": "131,680,47,30",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "当前等级"
+  },
+  {
+    "itemName": "gold",
+    "roiFront": "1198,640,43,32",
+    "roiBack": "1198,640,43,32",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "当前金币"
+  },
+  {
+    "itemName": "coin",
+    "roiFront": "395,660,87,25",
+    "roiBack": "395,660,87,25",
+    "mode": "DigitCounter",
+    "method": "Default",
+    "keyword": "",
+    "description": ""
+  },
+  {
+    "itemName": "rank",
+    "roiFront": "443,193,417,204",
+    "roiBack": "443,193,417,204",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": ""
+  },
+  {
+    "itemName": "grigri_option_name_1",
+    "roiFront": "269,370,191,45",
+    "roiBack": "269,370,191,45",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": ""
+  },
+  {
+    "itemName": "grigri_option_name_2",
+    "roiFront": "548,370,191,45",
+    "roiBack": "548,370,191,45",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": ""
+  },
+  {
+    "itemName": "grigri_option_name_3",
+    "roiFront": "825,370,191,45",
+    "roiBack": "825,370,191,45",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": ""
+  },
+  {
+    "itemName": "name_range",
+    "roiFront": "1060,41,166,623",
+    "roiBack": "1060,41,166,623",
+    "mode": "Full",
+    "method": "Default",
+    "keyword": "",
+    "description": "名字出现位置"
+  }
+]

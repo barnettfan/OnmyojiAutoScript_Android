@@ -1,0 +1,25 @@
+# Local architecture notes are kept outside the published repository.
+CS架构设计.md
+
+# Agent runtime data and deployment secrets.
+agent/state/
+agent/runtime/oas/config/*.json
+agent/runtime/oas/log/
+agent/runtime/oas/toolkit/.paddlex/
+agent/.env
+agent/agent.env
+
+# Server runtime data, secrets, and uploaded failure bundles.
+server/config/devices/*.json
+!server/config/devices/.gitkeep
+server/log/
+server/.env
+
+# Python and editor artifacts.
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+.idea/
+.vscode/

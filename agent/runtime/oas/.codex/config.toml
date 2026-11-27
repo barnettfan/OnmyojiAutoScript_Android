@@ -1,0 +1,5 @@
+[mcp_servers.oas-task-authoring]
+url = "http://127.0.0.1:22288/mcp"
+enabled = true
+default_tools_approval_mode = "auto"
+tool_timeout_sec = 60
