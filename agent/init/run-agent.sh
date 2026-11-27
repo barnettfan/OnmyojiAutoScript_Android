@@ -13,13 +13,16 @@ agent_env_file="${OAS_AGENT_ENV_FILE:-/data/oas-agent/agent.env}"
 # 指向另一份运行时；只有状态目录允许按设备挂载持久卷。
 export OAS_AGENT_RUNTIME_ROOT="/opt/oas"
 export OAS_AGENT_STATE_ROOT="${OAS_AGENT_STATE_ROOT:-/var/lib/oas-agent}"
+# 默认只允许 WSS。先清掉继承环境中的开关，只有挂载的 agent.env 明确写入
+# ``OAS_AGENT_ALLOW_INSECURE_WS=true`` 时才允许直连明文 ws:// Server。
+unset OAS_AGENT_ALLOW_INSECURE_WS
 if [ -r "$agent_env_file" ]; then
     while IFS='=' read -r agent_env_name agent_env_value || [ -n "$agent_env_name" ]; do
         case "$agent_env_name" in
             ''|'#'*)
                 continue
                 ;;
-            OAS_AGENT_DEVICE_ID|OAS_AGENT_SERVER_URL|OAS_AGENT_SHARED_SECRET|OAS_AGENT_STATE_ROOT|OAS_AGENT_VERSION|OAS_AGENT_RESOURCE_VERSION|OAS_AGENT_HEARTBEAT_SECONDS)
+            OAS_AGENT_DEVICE_ID|OAS_AGENT_SERVER_URL|OAS_AGENT_SHARED_SECRET|OAS_AGENT_STATE_ROOT|OAS_AGENT_VERSION|OAS_AGENT_RESOURCE_VERSION|OAS_AGENT_HEARTBEAT_SECONDS|OAS_AGENT_ALLOW_INSECURE_WS)
                 export "$agent_env_name=$agent_env_value"
                 ;;
             *)
@@ -29,10 +32,6 @@ if [ -r "$agent_env_file" ]; then
         esac
     done < "$agent_env_file"
 fi
-# 生产 init 服务只能建立 WSS。``OAS_AGENT_ALLOW_INSECURE_WS`` 仅供宿主机
-# 单元测试使用；即使基础镜像或部署环境残留该变量，也不能让设备 Agent 降级到
-# 明文 WebSocket。
-unset OAS_AGENT_ALLOW_INSECURE_WS
 # 固定镜像绝不在运行期下载 OCR/资源；即使外部环境误设 false 也必须保持拒绝。
 export OAS_AGENT_NO_RUNTIME_DOWNLOAD=true
 # Agent 源码没有作为系统 site-package 安装。显式设置模块搜索路径，保证 init

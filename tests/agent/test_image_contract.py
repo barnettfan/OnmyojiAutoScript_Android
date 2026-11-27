@@ -48,7 +48,7 @@ class ImageContractTest(unittest.TestCase):
         self.assertIn('export PYTHONPATH="/opt/oas-agent:${OAS_AGENT_RUNTIME_ROOT}', runner)
         self.assertIn('export OAS_AGENT_RUNTIME_ROOT="/opt/oas"', runner)
         self.assertNotIn('OAS_AGENT_RUNTIME_ROOT|', runner)
-        self.assertNotIn('OAS_AGENT_ALLOW_INSECURE_WS)', runner)
+        self.assertIn('OAS_AGENT_ALLOW_INSECURE_WS)', runner)
         self.assertIn('unset OAS_AGENT_ALLOW_INSECURE_WS', runner)
         self.assertIn('cd "$OAS_AGENT_RUNTIME_ROOT" || exit 70', runner)
         self.assertIn("exec python3 -m oas_android_agent", runner)

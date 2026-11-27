@@ -36,7 +36,7 @@ class AgentSettings:
 
     @classmethod
     def from_environment(cls) -> "AgentSettings":
-        """从镜像注入的环境变量加载配置，并拒绝不安全的默认值。"""
+        """从镜像注入的环境变量加载配置，默认拒绝明文 WebSocket。"""
         device_id = os.environ.get("OAS_AGENT_DEVICE_ID", "").strip()
         server_url = os.environ.get("OAS_AGENT_SERVER_URL", "").strip().rstrip("/")
         shared_secret = os.environ.get("OAS_AGENT_SHARED_SECRET", "")
@@ -56,7 +56,7 @@ class AgentSettings:
         if not DEVICE_ID_PATTERN.fullmatch(device_id):
             raise AgentConfigurationError("OAS_AGENT_DEVICE_ID 只能包含字母、数字和连字符，且长度为 1-64")
         if parsed.scheme not in ({"wss", "ws"} if allow_insecure else {"wss"}) or not parsed.netloc or not parsed.hostname:
-            raise AgentConfigurationError("OAS_AGENT_SERVER_URL 必须是 wss:// URL；本地测试才可设置 OAS_AGENT_ALLOW_INSECURE_WS=true")
+            raise AgentConfigurationError("OAS_AGENT_SERVER_URL 必须是 wss:// URL；仅显式设置 OAS_AGENT_ALLOW_INSECURE_WS=true 时允许 ws://")
         if parsed.username or parsed.password:
             raise AgentConfigurationError("OAS_AGENT_SERVER_URL 不能包含用户名或密码")
         # Agent 会固定追加 ``/agent/ws`` 以及错误包上传路径。允许部署地址

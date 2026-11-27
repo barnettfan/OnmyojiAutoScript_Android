@@ -84,6 +84,25 @@ class AgentSettingsTest(unittest.TestCase):
                 with self.assertRaisesRegex(AgentConfigurationError, "不能包含用户名或密码"):
                     AgentSettings.from_environment()
 
+    def test_allows_plain_ws_only_with_explicit_opt_in(self) -> None:
+        """公网 IP 直连必须通过显式开关确认，默认仍拒绝明文 WebSocket。"""
+        with tempfile.TemporaryDirectory() as folder:
+            base_environment = {
+                "OAS_AGENT_DEVICE_ID": "redroid-01",
+                "OAS_AGENT_SERVER_URL": "ws://154.206.14.32:22270",
+                "OAS_AGENT_SHARED_SECRET": "secret",
+                "OAS_AGENT_RUNTIME_ROOT": str(Path(folder)),
+            }
+            with patch.dict(os.environ, base_environment, clear=True):
+                with self.assertRaisesRegex(AgentConfigurationError, "必须是 wss"):
+                    AgentSettings.from_environment()
+            with patch.dict(
+                os.environ,
+                {**base_environment, "OAS_AGENT_ALLOW_INSECURE_WS": "true"},
+                clear=True,
+            ):
+                self.assertEqual(AgentSettings.from_environment().server_url, "ws://154.206.14.32:22270")
+
     def test_rejects_url_path_query_and_invalid_port(self) -> None:
         """统一的 WSS/HTTPS 根地址不能含会破坏固定路径拼接的额外部分。"""
         with tempfile.TemporaryDirectory() as folder:

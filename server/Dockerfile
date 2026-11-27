@@ -24,6 +24,6 @@ USER oas
 
 EXPOSE 22270
 
-# Host and port are supplied by docker-compose.yml so the process is reachable
-# only from the reverse-proxy container.
+# Host and port are supplied by docker-compose.yml. The Compose deployment
+# publishes this port directly for an explicitly opted-in ws:// Agent setup.
 CMD ["python", "main.py"]
